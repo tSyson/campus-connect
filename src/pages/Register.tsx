@@ -5,24 +5,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap, UserPlus } from "lucide-react";
+import { GraduationCap, UserPlus, Users, BookOpen, Shield } from "lucide-react";
+
+const roleOptions = [
+  { value: "student", label: "Student", icon: <GraduationCap className="h-4 w-4" />, description: "Scan QR codes to mark attendance" },
+  { value: "lecturer", label: "Lecturer", icon: <BookOpen className="h-4 w-4" />, description: "Create sessions and generate QR codes" },
+  { value: "admin", label: "Administrator", icon: <Shield className="h-4 w-4" />, description: "Manage the entire system" },
+];
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("student");
+  const [regNumber, setRegNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (role === "student" && !regNumber.trim()) {
+      toast({ variant: "destructive", title: "Required", description: "Please enter your registration number." });
+      return;
+    }
     setLoading(true);
+    const metadata: Record<string, string> = { full_name: fullName, role };
+    if (role === "student") metadata.registration_number = regNumber;
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
+      options: { data: metadata, emailRedirectTo: window.location.origin },
     });
     setLoading(false);
     if (error) {
@@ -33,8 +49,10 @@ export default function Register() {
     }
   };
 
+  const selectedRole = roleOptions.find((r) => r.value === role);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <div className="w-full max-w-md animate-fade-in">
         <div className="flex flex-col items-center mb-8">
           <div className="h-14 w-14 rounded-xl bg-primary flex items-center justify-center mb-4">
@@ -46,10 +64,35 @@ export default function Register() {
         <Card>
           <CardHeader>
             <CardTitle>Register</CardTitle>
-            <CardDescription>Create a new account to get started</CardDescription>
+            <CardDescription>Choose your role and create an account</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRegister} className="space-y-4">
+              {/* Role Selection */}
+              <div className="space-y-2">
+                <Label>I am a</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {roleOptions.map((opt) => (
+                    <button
+                      type="button"
+                      key={opt.value}
+                      onClick={() => setRole(opt.value)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-all text-center ${
+                        role === opt.value
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "border-border bg-card text-muted-foreground hover:border-primary/30"
+                      }`}
+                    >
+                      {opt.icon}
+                      <span className="text-xs font-semibold">{opt.label}</span>
+                    </button>
+                  ))}
+                </div>
+                {selectedRole && (
+                  <p className="text-xs text-muted-foreground text-center">{selectedRole.description}</p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input id="name" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
@@ -62,9 +105,24 @@ export default function Register() {
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
               </div>
+
+              {/* Student-specific field */}
+              {role === "student" && (
+                <div className="space-y-2">
+                  <Label htmlFor="regNumber">Registration Number</Label>
+                  <Input
+                    id="regNumber"
+                    placeholder="e.g. CS/2024/001"
+                    value={regNumber}
+                    onChange={(e) => setRegNumber(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+
               <Button type="submit" className="w-full" disabled={loading}>
                 <UserPlus className="mr-2 h-4 w-4" />
-                {loading ? "Creating account..." : "Create account"}
+                {loading ? "Creating account..." : `Register as ${selectedRole?.label}`}
               </Button>
             </form>
             <div className="mt-4 text-center text-sm text-muted-foreground">
