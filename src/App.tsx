@@ -13,6 +13,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import StudentsPage from "./pages/StudentsPage";
 import CoursesPage from "./pages/CoursesPage";
+import DepartmentsPage from "./pages/DepartmentsPage";
+import EnrollmentsPage from "./pages/EnrollmentsPage";
 import AttendancePage from "./pages/AttendancePage";
 import ReportsPage from "./pages/ReportsPage";
 import SemestersPage from "./pages/SemestersPage";
@@ -37,6 +39,8 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/students" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
             <Route path="/dashboard/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
+            <Route path="/dashboard/departments" element={<ProtectedRoute><DepartmentsPage /></ProtectedRoute>} />
+            <Route path="/dashboard/enrollments" element={<ProtectedRoute><EnrollmentsPage /></ProtectedRoute>} />
             <Route path="/dashboard/attendance" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
             <Route path="/dashboard/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
             <Route path="/dashboard/semesters" element={<ProtectedRoute><SemestersPage /></ProtectedRoute>} />

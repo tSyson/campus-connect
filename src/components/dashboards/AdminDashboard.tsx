@@ -143,9 +143,12 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
           <p className="text-muted-foreground">System overview and management</p>
         </div>
-        <div className="flex gap-2">
-          <Link to="/dashboard/students"><Button variant="outline" size="sm">Manage Students</Button></Link>
-          <Link to="/dashboard/courses"><Button variant="outline" size="sm">Manage Courses</Button></Link>
+        <div className="flex gap-2 flex-wrap">
+          <Link to="/dashboard/departments"><Button variant="outline" size="sm">Departments</Button></Link>
+          <Link to="/dashboard/courses"><Button variant="outline" size="sm">Courses</Button></Link>
+          <Link to="/dashboard/enrollments"><Button variant="outline" size="sm">Enrollments</Button></Link>
+          <Link to="/dashboard/students"><Button variant="outline" size="sm">Students</Button></Link>
+          <Link to="/dashboard/semesters"><Button variant="outline" size="sm">Semesters</Button></Link>
         </div>
       </div>
 
