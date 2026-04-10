@@ -50,25 +50,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { icon: <QrCode className="h-8 w-8" />, title: "QR Code Attendance", desc: "Generate unique QR codes for each session. Students scan to check in instantly." },
-            { icon: <BarChart3 className="h-8 w-8" />, title: "Real-Time Reports", desc: "Monitor attendance live. Track eligibility with automatic percentage calculations." },
-            { icon: <Shield className="h-8 w-8" />, title: "Secure & Role-Based", desc: "Admin, lecturer, and student roles with proper access control and data security." },
-          ].map((f, i) => (
-            <div key={i} className="text-center p-6 rounded-xl bg-card border border-border">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-xl bg-accent text-accent-foreground mb-4">
-                {f.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">{f.title}</h3>
-              <p className="text-muted-foreground text-sm">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
         <p>© {new Date().getFullYear()} SAMS — Student Attendance Management System</p>
