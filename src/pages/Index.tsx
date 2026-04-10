@@ -6,27 +6,32 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
-      <nav className="border-b border-border bg-card">
+      <nav className="border-b border-red-700 bg-red-700">
         <div className="container mx-auto flex items-center justify-between py-4 px-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-              <GraduationCap className="h-5 w-5 text-primary-foreground" />
+            <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center">
+              <GraduationCap className="h-5 w-5 text-red-700" />
             </div>
-            <span className="text-lg font-bold text-foreground">SAMS</span>
+            <span className="text-lg font-bold text-white">SAMS</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link to="/login"><Button variant="ghost">Sign in</Button></Link>
-            <Link to="/register"><Button>Get Started</Button></Link>
+            <Link to="/login"><Button variant="ghost" className="text-white hover:bg-red-600">Sign in</Button></Link>
+            <Link to="/register"><Button className="bg-white text-red-700 hover:bg-red-100">Get Started</Button></Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-4 animate-fade-in">
+      <section
+        className="relative bg-cover bg-center bg-no-repeat py-28"
+        style={{ backgroundImage: "url('/images/muni-bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative container mx-auto px-4 text-center">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 animate-fade-in">
           Student Attendance<br />Made Simple
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in">
+        <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8 animate-fade-in">
           Automate attendance tracking with QR codes. Real-time monitoring, eligibility reports, and powerful admin tools — all in one place.
         </p>
         <div className="flex items-center justify-center gap-4 animate-fade-in">
@@ -38,6 +43,7 @@ export default function Index() {
           <Link to="/login">
             <Button size="lg" variant="outline">Sign in</Button>
           </Link>
+        </div>
         </div>
       </section>
 
