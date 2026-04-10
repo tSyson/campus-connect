@@ -21,17 +21,21 @@ export default function Index() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section
-        className="relative bg-cover bg-center bg-no-repeat py-28"
-        style={{ backgroundImage: "url('/images/muni-bg.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative container mx-auto px-4 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 animate-fade-in">
+      {/* Hero Image */}
+      <section className="w-full">
+        <img
+          src="/images/muni-bg.jpg"
+          alt="Muni University campus"
+          className="w-full h-[400px] object-cover"
+        />
+      </section>
+
+      {/* Text Content */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-4 animate-fade-in">
           Student Attendance<br />Made Simple
         </h1>
-        <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8 animate-fade-in">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in">
           Automate attendance tracking with QR codes. Real-time monitoring, eligibility reports, and powerful admin tools — all in one place.
         </p>
         <div className="flex items-center justify-center gap-4 animate-fade-in">
@@ -43,7 +47,6 @@ export default function Index() {
           <Link to="/login">
             <Button size="lg" variant="outline">Sign in</Button>
           </Link>
-        </div>
         </div>
       </section>
 
