@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   GraduationCap, LayoutDashboard, Users, BookOpen, QrCode,
   ClipboardList, BarChart3, Settings, LogOut, Menu, X, CalendarDays,
+  Building2, UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -19,7 +20,9 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-4 w-4" />, roles: ["admin", "lecturer", "student"] },
   { label: "Students", href: "/dashboard/students", icon: <Users className="h-4 w-4" />, roles: ["admin", "lecturer"] },
+  { label: "Departments", href: "/dashboard/departments", icon: <Building2 className="h-4 w-4" />, roles: ["admin"] },
   { label: "Courses", href: "/dashboard/courses", icon: <BookOpen className="h-4 w-4" />, roles: ["admin", "lecturer"] },
+  { label: "Enrollments", href: "/dashboard/enrollments", icon: <UserPlus className="h-4 w-4" />, roles: ["admin"] },
   { label: "Attendance", href: "/dashboard/attendance", icon: <QrCode className="h-4 w-4" />, roles: ["admin", "lecturer", "student"] },
   { label: "Reports", href: "/dashboard/reports", icon: <BarChart3 className="h-4 w-4" />, roles: ["admin", "lecturer"] },
   { label: "Semesters", href: "/dashboard/semesters", icon: <CalendarDays className="h-4 w-4" />, roles: ["admin"] },
