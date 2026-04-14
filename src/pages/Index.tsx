@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, QrCode, BarChart3, Shield, ArrowRight } from "lucide-react";
+import { GraduationCap, ArrowRight } from "lucide-react";
 
 export default function Index() {
   return (
@@ -21,32 +21,30 @@ export default function Index() {
         </div>
       </nav>
 
-      {/* Hero Image */}
-      <section className="w-full">
+      {/* Hero with text overlay */}
+      <section className="relative w-full h-[500px]">
         <img
           src="/images/muni-bg.jpg"
           alt="Muni University campus"
-          className="w-full h-[400px] object-cover"
+          className="w-full h-full object-cover"
         />
-      </section>
-
-      {/* Text Content */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-4 animate-fade-in">
-          Student Attendance<br />Made Simple
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in">
-          Automate attendance tracking with QR codes. Real-time monitoring, eligibility reports, and powerful admin tools — all in one place.
-        </p>
-        <div className="flex items-center justify-center gap-4 animate-fade-in">
-          <Link to="/register">
-            <Button size="lg">
-              Get Started <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button size="lg" variant="outline">Sign in</Button>
-          </Link>
+        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 animate-fade-in">
+            Student Attendance<br />Made Simple
+          </h1>
+          <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8 animate-fade-in">
+            Automate attendance tracking with QR codes. Real-time monitoring, eligibility reports, and powerful admin tools — all in one place.
+          </p>
+          <div className="flex items-center justify-center gap-4 animate-fade-in">
+            <Link to="/register">
+              <Button size="lg" className="bg-red-700 hover:bg-red-800 text-white">
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/login">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">Sign in</Button>
+            </Link>
+          </div>
         </div>
       </section>
 
