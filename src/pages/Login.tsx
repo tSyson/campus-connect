@@ -29,24 +29,24 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* University Image */}
-      <div className="w-full">
+      {/* Hero image with overlay branding */}
+      <div className="relative w-full h-[280px]">
         <img
           src="/images/muni-bg.jpg"
           alt="Muni University campus"
-          className="w-full h-[220px] object-cover"
+          className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center">
+          <div className="h-14 w-14 rounded-xl bg-white flex items-center justify-center mb-3">
+            <GraduationCap className="h-8 w-8 text-red-700" />
+          </div>
+          <h1 className="text-2xl font-bold text-white">SAMS</h1>
+          <p className="text-white/70 text-sm">Student Attendance Management System</p>
+        </div>
       </div>
 
       <div className="flex items-center justify-center px-4 py-10">
         <div className="w-full max-w-md animate-fade-in">
-          <div className="flex flex-col items-center mb-8">
-            <div className="h-14 w-14 rounded-xl bg-primary flex items-center justify-center mb-4">
-              <GraduationCap className="h-8 w-8 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">SAMS</h1>
-            <p className="text-muted-foreground text-sm">Student Attendance Management System</p>
-          </div>
           <Card>
             <CardHeader>
               <CardTitle>Welcome back</CardTitle>
@@ -62,7 +62,7 @@ export default function Login() {
                   <Label htmlFor="password">Password</Label>
                   <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full bg-red-700 hover:bg-red-800" disabled={loading}>
                   <LogIn className="mr-2 h-4 w-4" />
                   {loading ? "Signing in..." : "Sign in"}
                 </Button>
