@@ -37,9 +37,7 @@ export default function Login() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center">
-          <div className="h-14 w-14 rounded-xl bg-white flex items-center justify-center mb-3">
-            <GraduationCap className="h-8 w-8 text-red-700" />
-          </div>
+          <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-3" />
           <h1 className="text-2xl font-bold text-white">SAMS</h1>
           <p className="text-white/70 text-sm">Student Attendance Management System</p>
         </div>

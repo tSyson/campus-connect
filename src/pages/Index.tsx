@@ -9,9 +9,7 @@ export default function Index() {
       <nav className="border-b border-red-700 bg-red-700">
         <div className="container mx-auto flex items-center justify-between py-4 px-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center">
-              <GraduationCap className="h-5 w-5 text-red-700" />
-            </div>
+            <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-9 w-9 rounded-lg object-contain" />
             <span className="text-lg font-bold text-white">SAMS</span>
           </div>
           <div className="flex items-center gap-3">
