@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap, UserPlus, BookOpen, Shield } from "lucide-react";
+import { ArrowLeft, UserPlus, BookOpen, Shield, GraduationCap } from "lucide-react";
 
 const roleOptions = [
   { value: "student", label: "Student", icon: <GraduationCap className="h-4 w-4" />, description: "Scan QR codes to mark attendance" },
@@ -52,6 +52,12 @@ export default function Register() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Back button */}
+      <div className="px-4 pt-4">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-muted-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
+      </div>
       {/* Hero image with overlay branding */}
       <div className="relative w-full h-[280px]">
         <img
