@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { GraduationCap, Mail } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleReset = async (e: React.FormEvent) => {
@@ -28,12 +29,16 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen bg-background px-4">
+      <div className="pt-4">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-muted-foreground">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
+      </div>
+      <div className="flex items-center justify-center min-h-[calc(100vh-60px)]">
       <div className="w-full max-w-md animate-fade-in">
         <div className="flex flex-col items-center mb-8">
-          <div className="h-14 w-14 rounded-xl bg-primary flex items-center justify-center mb-4">
-            <GraduationCap className="h-8 w-8 text-primary-foreground" />
-          </div>
+          <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-4" />
         </div>
         <Card>
           <CardHeader>
@@ -56,6 +61,7 @@ export default function ForgotPassword() {
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );
