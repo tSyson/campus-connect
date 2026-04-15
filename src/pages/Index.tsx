@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Footer } from "@/components/Footer";
 
 export default function Index() {
   return (
@@ -13,8 +14,8 @@ export default function Index() {
             <span className="text-lg font-bold text-white">SAMS</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link to="/login"><Button variant="ghost" className="text-white hover:bg-red-600">Sign in</Button></Link>
-            <Link to="/register"><Button className="bg-white text-red-700 hover:bg-red-100">Get Started</Button></Link>
+            <Link to="/login"><Button variant="ghost" className="text-white hover:bg-white/20">Sign in</Button></Link>
+            <Link to="/register"><Button className="bg-blue-100 text-blue-900 hover:bg-blue-200">Get Started</Button></Link>
           </div>
         </div>
       </nav>
@@ -47,9 +48,7 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} SAMS — Student Attendance Management System</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
