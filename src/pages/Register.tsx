@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, UserPlus, BookOpen, Shield, GraduationCap } from "lucide-react";
+import { Footer } from "@/components/Footer";
 
 const roleOptions = [
   { value: "student", label: "Student", icon: <GraduationCap className="h-4 w-4" />, description: "Scan QR codes to mark attendance" },
@@ -138,6 +139,9 @@ export default function Register() {
           </Card>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

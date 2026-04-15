@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, KeyRound } from "lucide-react";
+import { Footer } from "@/components/Footer";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -35,37 +36,40 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4">
-      <div className="pt-4">
+    <div className="min-h-screen bg-background">
+      <div className="px-4 pt-4">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-muted-foreground">
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
       </div>
-      <div className="flex items-center justify-center min-h-[calc(100vh-60px)]">
-      <div className="w-full max-w-md animate-fade-in">
-        <div className="flex flex-col items-center mb-8">
-          <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-4" />
+      <div className="flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md animate-fade-in">
+          <div className="flex flex-col items-center mb-8">
+            <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-4" />
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Set new password</CardTitle>
+              <CardDescription>Enter your new password below</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">New Password</Label>
+                  <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                </div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  {loading ? "Updating..." : "Update password"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Set new password</CardTitle>
-            <CardDescription>Enter your new password below</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleReset} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">New Password</Label>
-                <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                <KeyRound className="mr-2 h-4 w-4" />
-                {loading ? "Updating..." : "Update password"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
       </div>
-      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

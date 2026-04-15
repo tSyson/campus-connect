@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, LogIn } from "lucide-react";
+import { Footer } from "@/components/Footer";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -80,6 +81,9 @@ export default function Login() {
           </Card>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
