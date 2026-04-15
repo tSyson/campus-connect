@@ -31,28 +31,30 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background">
       {/* Back button */}
-      <div className="px-4 pt-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-muted-foreground">
+      <div className="px-4 pt-4 absolute top-0 left-0 z-20">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-white hover:bg-white/20">
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
       </div>
-      {/* Hero image with overlay branding */}
-      <div className="relative w-full h-[280px]">
+
+      {/* Hero image with card overlapping */}
+      <div className="relative w-full h-[320px]">
         <img
           src="/images/muni-bg.jpg"
           alt="Muni University campus"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center">
+        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center pb-16">
           <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-3" />
           <h1 className="text-2xl font-bold text-white">SAMS</h1>
           <p className="text-white/70 text-sm">Student Attendance Management System</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-center px-4 py-10">
+      {/* Card overlapping the hero */}
+      <div className="flex items-start justify-center px-4 -mt-16 relative z-10 pb-10">
         <div className="w-full max-w-md animate-fade-in">
-          <Card>
+          <Card className="shadow-xl">
             <CardHeader>
               <CardTitle>Welcome back</CardTitle>
               <CardDescription>Sign in to your account to continue</CardDescription>
@@ -82,7 +84,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
