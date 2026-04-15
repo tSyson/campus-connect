@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, UserPlus, BookOpen, Shield, GraduationCap } from "lucide-react";
 import { Footer } from "@/components/Footer";
@@ -21,9 +22,19 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
   const [regNumber, setRegNumber] = useState("");
+  const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState<{ id: string; name: string; code: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      const { data } = await supabase.from("departments").select("id, name, code").order("name");
+      if (data) setDepartments(data);
+    };
+    fetchDepartments();
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,9 +42,14 @@ export default function Register() {
       toast({ variant: "destructive", title: "Required", description: "Please enter your registration number." });
       return;
     }
+    if ((role === "lecturer" || role === "admin") && !department) {
+      toast({ variant: "destructive", title: "Required", description: "Please select a department." });
+      return;
+    }
     setLoading(true);
     const metadata: Record<string, string> = { full_name: fullName, role };
     if (role === "student") metadata.registration_number = regNumber;
+    if (role === "lecturer" || role === "admin") metadata.department = department;
 
     const { error } = await supabase.auth.signUp({
       email,
@@ -54,28 +70,30 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-background">
       {/* Back button */}
-      <div className="px-4 pt-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-muted-foreground">
+      <div className="px-4 pt-4 absolute top-0 left-0 z-20">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1 text-white hover:bg-white/20">
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
       </div>
-      {/* Hero image with overlay branding */}
-      <div className="relative w-full h-[280px]">
+
+      {/* Hero image */}
+      <div className="relative w-full h-[320px]">
         <img
           src="/images/muni-bg.jpg"
           alt="Muni University campus"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center">
+        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center pb-16">
           <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-14 w-14 rounded-xl object-contain mb-3" />
           <h1 className="text-2xl font-bold text-white">SAMS</h1>
           <p className="text-white/70 text-sm">Create your account</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-center px-4 py-8">
+      {/* Card overlapping the hero */}
+      <div className="flex items-start justify-center px-4 -mt-16 relative z-10 pb-10">
         <div className="w-full max-w-md animate-fade-in">
-          <Card>
+          <Card className="shadow-xl">
             <CardHeader>
               <CardTitle>Register</CardTitle>
               <CardDescription>Choose your role and create an account</CardDescription>
@@ -126,6 +144,24 @@ export default function Register() {
                   </div>
                 )}
 
+                {(role === "lecturer" || role === "admin") && (
+                  <div className="space-y-2">
+                    <Label htmlFor="department">Department</Label>
+                    <Select value={department} onValueChange={setDepartment}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {departments.map((dept) => (
+                          <SelectItem key={dept.id} value={dept.id}>
+                            {dept.name} ({dept.code})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 <Button type="submit" className="w-full bg-red-700 hover:bg-red-800" disabled={loading}>
                   <UserPlus className="mr-2 h-4 w-4" />
                   {loading ? "Creating account..." : `Register as ${selectedRole?.label}`}
@@ -140,7 +176,6 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
