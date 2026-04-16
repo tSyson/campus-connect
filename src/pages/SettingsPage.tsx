@@ -1,13 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, ArrowLeft } from "lucide-react";
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   return (
     <DashboardLayout>
+      <Button variant="ghost" size="sm" className="mb-4 gap-2" onClick={() => navigate(-1)}>
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Button>
       <h1 className="text-2xl font-bold text-foreground mb-1">Settings</h1>
       <p className="text-muted-foreground mb-6">System configuration and policies</p>
 
