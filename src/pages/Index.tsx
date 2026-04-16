@@ -15,7 +15,7 @@ export default function Index() {
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login"><Button variant="ghost" className="text-white hover:bg-white/20">Sign in</Button></Link>
-            <Link to="/register"><Button className="bg-blue-100 text-blue-900 hover:bg-blue-200">Get Started</Button></Link>
+            <Link to="/register"><Button className="bg-primary text-primary-foreground hover:bg-primary/90">Get Started</Button></Link>
           </div>
         </div>
       </nav>
@@ -41,7 +41,7 @@ export default function Index() {
               </Button>
             </Link>
             <Link to="/login">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">Sign in</Button>
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">Sign in</Button>
             </Link>
           </div>
         </div>
