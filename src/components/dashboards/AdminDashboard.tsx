@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const [departmentData, setDepartmentData] = useState<any[]>([]);
   const [lowAttendance, setLowAttendance] = useState<any[]>([]);
   const [courseAttendance, setCourseAttendance] = useState<any[]>([]);
+  const [enrolledStudents, setEnrolledStudents] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -125,6 +126,14 @@ export default function AdminDashboard() {
         }
         setLowAttendance(warnings.slice(0, 10));
       }
+
+      // Enrolled students per course
+      const { data: allEnrollments } = await supabase
+        .from("enrollments")
+        .select("*, courses(code, name), students(registration_number, profiles:user_id(full_name, email))")
+        .order("enrolled_at", { ascending: false })
+        .limit(20);
+      setEnrolledStudents(allEnrollments || []);
     };
     fetchAll();
   }, []);
@@ -323,6 +332,50 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Enrolled Students by Course */}
+      <Card className="mt-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" /> Enrolled Students
+            </CardTitle>
+            <CardDescription>Students enrolled in course units</CardDescription>
+          </div>
+          <Link to="/dashboard/enrollments">
+            <Button variant="ghost" size="sm">Manage <ArrowRight className="ml-1 h-3 w-3" /></Button>
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {enrolledStudents.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Reg. Number</TableHead>
+                  <TableHead>Course</TableHead>
+                  <TableHead>Enrolled On</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {enrolledStudents.map((en) => (
+                  <TableRow key={en.id}>
+                    <TableCell className="font-medium">{(en.students as any)?.profiles?.full_name}</TableCell>
+                    <TableCell className="font-mono text-sm">{(en.students as any)?.registration_number}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{(en.courses as any)?.code}</Badge>
+                      <span className="ml-2 text-sm text-muted-foreground">{(en.courses as any)?.name}</span>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{new Date(en.enrolled_at).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">No enrollments yet</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
