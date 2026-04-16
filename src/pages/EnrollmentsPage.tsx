@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Search, Trash2, UserPlus, ArrowLeft } from "lucide-react";
 
 export default function EnrollmentsPage() {
+  const navigate = useNavigate();
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
@@ -92,6 +93,9 @@ export default function EnrollmentsPage() {
 
   return (
     <DashboardLayout>
+      <Button variant="ghost" size="sm" className="mb-4 gap-2" onClick={() => navigate(-1)}>
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Button>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Enrollments</h1>

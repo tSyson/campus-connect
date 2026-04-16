@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Building2, Trash2, ArrowLeft } from "lucide-react";
 
 export default function DepartmentsPage() {
+  const navigate = useNavigate();
   const [departments, setDepartments] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", code: "" });
@@ -52,6 +53,9 @@ export default function DepartmentsPage() {
 
   return (
     <DashboardLayout>
+      <Button variant="ghost" size="sm" className="mb-4 gap-2" onClick={() => navigate(-1)}>
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Button>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Departments</h1>
