@@ -134,6 +134,7 @@ export default function AdminDashboard() {
         .order("enrolled_at", { ascending: false })
         .limit(20);
       setEnrolledStudents(allEnrollments || []);
+    };
     fetchAll();
   }, []);
 
