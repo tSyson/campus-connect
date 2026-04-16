@@ -126,7 +126,14 @@ export default function AdminDashboard() {
         }
         setLowAttendance(warnings.slice(0, 10));
       }
-    };
+
+      // Enrolled students per course
+      const { data: allEnrollments } = await supabase
+        .from("enrollments")
+        .select("*, courses(code, name), students(registration_number, profiles:user_id(full_name, email))")
+        .order("enrolled_at", { ascending: false })
+        .limit(20);
+      setEnrolledStudents(allEnrollments || []);
     fetchAll();
   }, []);
 
