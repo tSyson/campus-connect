@@ -7,7 +7,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
-      <nav className="border-b border-red-700 bg-red-700">
+      <nav className="border-b border-primary bg-primary">
         <div className="container mx-auto flex items-center justify-between py-4 px-4">
           <div className="flex items-center gap-3">
             <img src="/images/muni-logo.jpeg" alt="Muni University logo" className="h-9 w-9 rounded-lg object-contain" />
