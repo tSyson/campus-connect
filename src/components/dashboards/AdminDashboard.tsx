@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const [departmentData, setDepartmentData] = useState<any[]>([]);
   const [lowAttendance, setLowAttendance] = useState<any[]>([]);
   const [courseAttendance, setCourseAttendance] = useState<any[]>([]);
+  const [enrolledStudents, setEnrolledStudents] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
