@@ -143,23 +143,21 @@ export default function Register() {
                   </div>
                 )}
 
-                {(role === "lecturer" || role === "admin") && (
-                  <div className="space-y-2">
-                    <Label htmlFor="department">Department</Label>
-                    <Select value={department} onValueChange={setDepartment}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {departments.map((dept) => (
-                          <SelectItem key={dept.id} value={dept.id}>
-                            {dept.name} ({dept.code})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <Label htmlFor="department">Department</Label>
+                  <Select value={department} onValueChange={setDepartment}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map((dept) => (
+                        <SelectItem key={dept.id} value={dept.id}>
+                          {dept.name} ({dept.code})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 <Button type="submit" className="w-full bg-red-700 hover:bg-red-800" disabled={loading}>
                   <UserPlus className="mr-2 h-4 w-4" />
