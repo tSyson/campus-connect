@@ -42,14 +42,13 @@ export default function Register() {
       toast({ variant: "destructive", title: "Required", description: "Please enter your registration number." });
       return;
     }
-    if ((role === "lecturer" || role === "admin") && !department) {
+    if (!department) {
       toast({ variant: "destructive", title: "Required", description: "Please select a department." });
       return;
     }
     setLoading(true);
-    const metadata: Record<string, string> = { full_name: fullName, role };
+    const metadata: Record<string, string> = { full_name: fullName, role, department };
     if (role === "student") metadata.registration_number = regNumber;
-    if (role === "lecturer" || role === "admin") metadata.department = department;
 
     const { error } = await supabase.auth.signUp({
       email,
