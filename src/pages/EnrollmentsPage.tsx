@@ -36,9 +36,14 @@ export default function EnrollmentsPage() {
 
   useEffect(() => {
     fetchEnrollments();
-    supabase.from("courses").select("id, code, name").order("code").then(({ data }) => setCourses(data || []));
-    supabase.from("students").select("id, registration_number, profiles:user_id(full_name, email)").order("registration_number").then(({ data }) => setStudents(data || []));
+    supabase.from("courses").select("id, code, name, department_id, departments:department_id(name, code)").order("code").then(({ data }) => setCourses(data || []));
+    supabase.from("students").select("id, registration_number, department_id, departments:department_id(name, code), profiles:user_id(full_name, email)").order("registration_number").then(({ data }) => setStudents(data || []));
   }, []);
+
+  const courseDeptId = courses.find((c) => c.id === selectedCourse)?.department_id;
+  const eligibleStudents = courseDeptId
+    ? students.filter((s) => s.department_id === courseDeptId)
+    : students;
 
   const handleEnroll = async (e: React.FormEvent) => {
     e.preventDefault();
