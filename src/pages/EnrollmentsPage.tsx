@@ -115,25 +115,43 @@ export default function EnrollmentsPage() {
             <form onSubmit={handleEnroll} className="space-y-4">
               <div className="space-y-2">
                 <Label>Course Unit</Label>
-                <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                <Select value={selectedCourse} onValueChange={(v) => { setSelectedCourse(v); setSelectedStudent(""); }}>
                   <SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger>
                   <SelectContent>
                     {courses.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>{c.code} — {c.name}</SelectItem>
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.code} — {c.name}
+                        {(c.departments as any)?.code ? ` · ${(c.departments as any).code}` : ""}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Student</Label>
-                <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-                  <SelectTrigger><SelectValue placeholder="Select student" /></SelectTrigger>
+                <Label>
+                  Student
+                  {courseDeptId && (
+                    <span className="ml-2 text-xs text-muted-foreground font-normal">
+                      (only {(courses.find((c) => c.id === selectedCourse)?.departments as any)?.name} students)
+                    </span>
+                  )}
+                </Label>
+                <Select value={selectedStudent} onValueChange={setSelectedStudent} disabled={!selectedCourse}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={selectedCourse ? "Select student" : "Pick a course first"} />
+                  </SelectTrigger>
                   <SelectContent>
-                    {students.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.registration_number} — {(s.profiles as any)?.full_name}
-                      </SelectItem>
-                    ))}
+                    {eligibleStudents.length === 0 ? (
+                      <div className="px-2 py-3 text-sm text-muted-foreground text-center">
+                        No students in this department yet
+                      </div>
+                    ) : (
+                      eligibleStudents.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.registration_number} — {(s.profiles as any)?.full_name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
