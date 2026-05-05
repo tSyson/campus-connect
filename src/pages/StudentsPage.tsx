@@ -16,6 +16,7 @@ export default function StudentsPage() {
   const navigate = useNavigate();
   const [students, setStudents] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [filterYear, setFilterYear] = useState("all");
   const [open, setOpen] = useState(false);
   const [departments, setDepartments] = useState<any[]>([]);
   const [form, setForm] = useState({ fullName: "", email: "", password: "", regNumber: "", departmentId: "", yearOfStudy: "1" });
@@ -70,7 +71,9 @@ export default function StudentsPage() {
   const filtered = students.filter((s) => {
     const name = (s.profiles as any)?.full_name?.toLowerCase() || "";
     const reg = s.registration_number?.toLowerCase() || "";
-    return name.includes(search.toLowerCase()) || reg.includes(search.toLowerCase());
+    const matchesSearch = name.includes(search.toLowerCase()) || reg.includes(search.toLowerCase());
+    const matchesYear = filterYear === "all" || String(s.year_of_study) === filterYear;
+    return matchesSearch && matchesYear;
   });
 
   return (
@@ -129,9 +132,20 @@ export default function StudentsPage() {
 
       <Card>
         <CardHeader>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search students..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search students..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+            </div>
+            <Select value={filterYear} onValueChange={setFilterYear}>
+              <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="All years" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All years</SelectItem>
+                <SelectItem value="1">Year 1</SelectItem>
+                <SelectItem value="2">Year 2</SelectItem>
+                <SelectItem value="3">Year 3</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent>
