@@ -92,7 +92,7 @@ export default function EnrollmentsPage() {
     const reg = (en.students as any)?.registration_number?.toLowerCase() || "";
     const courseCode = (en.courses as any)?.code?.toLowerCase() || "";
     const matchesSearch = name.includes(q) || reg.includes(q) || courseCode.includes(q);
-    const matchesCourse = !filterCourse || en.course_id === filterCourse;
+    const matchesCourse = filterCourse === "all" || en.course_id === filterCourse;
     return matchesSearch && matchesCourse;
   });
 
