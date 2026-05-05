@@ -120,6 +120,7 @@ export type Database = {
           semester: string | null
           total_weeks: number
           updated_at: string
+          year_of_study: number
         }
         Insert: {
           academic_year?: string | null
@@ -133,6 +134,7 @@ export type Database = {
           semester?: string | null
           total_weeks?: number
           updated_at?: string
+          year_of_study?: number
         }
         Update: {
           academic_year?: string | null
@@ -146,6 +148,7 @@ export type Database = {
           semester?: string | null
           total_weeks?: number
           updated_at?: string
+          year_of_study?: number
         }
         Relationships: [
           {
@@ -217,6 +220,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          department_id: string | null
           email: string
           full_name: string
           id: string
@@ -226,6 +230,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          department_id?: string | null
           email: string
           full_name: string
           id?: string
@@ -235,6 +240,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          department_id?: string | null
           email?: string
           full_name?: string
           id?: string
@@ -242,7 +248,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       semesters: {
         Row: {
