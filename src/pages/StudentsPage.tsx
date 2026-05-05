@@ -16,6 +16,7 @@ export default function StudentsPage() {
   const navigate = useNavigate();
   const [students, setStudents] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [filterYear, setFilterYear] = useState("all");
   const [open, setOpen] = useState(false);
   const [departments, setDepartments] = useState<any[]>([]);
   const [form, setForm] = useState({ fullName: "", email: "", password: "", regNumber: "", departmentId: "", yearOfStudy: "1" });
