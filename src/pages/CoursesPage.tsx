@@ -99,7 +99,7 @@ export default function CoursesPage() {
               </div>
               <div className="space-y-2">
                 <Label>Department</Label>
-                <Select value={form.departmentId} onValueChange={(v) => setForm({ ...form, departmentId: v })}>
+                <Select value={form.departmentId} onValueChange={(v) => setForm({ ...form, departmentId: v, lecturerId: "" })}>
                   <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
                   <SelectContent>
                     {departments.map((d) => (<SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>))}
@@ -107,11 +107,37 @@ export default function CoursesPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Lecturer</Label>
-                <Select value={form.lecturerId} onValueChange={(v) => setForm({ ...form, lecturerId: v })}>
-                  <SelectTrigger><SelectValue placeholder="Select lecturer" /></SelectTrigger>
+                <Label>
+                  Lecturer
+                  {form.departmentId && (
+                    <span className="ml-2 text-xs text-muted-foreground font-normal">
+                      (only lecturers in this department)
+                    </span>
+                  )}
+                </Label>
+                <Select value={form.lecturerId} onValueChange={(v) => setForm({ ...form, lecturerId: v })} disabled={!form.departmentId}>
+                  <SelectTrigger><SelectValue placeholder={form.departmentId ? "Select lecturer" : "Pick a department first"} /></SelectTrigger>
                   <SelectContent>
-                    {lecturers.map((l) => (<SelectItem key={l.user_id} value={l.user_id}>{(l.profiles as any)?.full_name}</SelectItem>))}
+                    {eligibleLecturers.length === 0 ? (
+                      <div className="px-2 py-3 text-sm text-muted-foreground text-center">
+                        No lecturers in this department yet
+                      </div>
+                    ) : (
+                      eligibleLecturers.map((l) => (
+                        <SelectItem key={l.user_id} value={l.user_id}>{(l.profiles as any)?.full_name}</SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Year of Study</Label>
+                <Select value={form.yearOfStudy} onValueChange={(v) => setForm({ ...form, yearOfStudy: v })}>
+                  <SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Year 1</SelectItem>
+                    <SelectItem value="2">Year 2</SelectItem>
+                    <SelectItem value="3">Year 3</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
