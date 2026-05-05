@@ -16,10 +16,11 @@ export default function CoursesPage() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [filterYear, setFilterYear] = useState("all");
   const [open, setOpen] = useState(false);
   const [departments, setDepartments] = useState<any[]>([]);
   const [lecturers, setLecturers] = useState<any[]>([]);
-  const [form, setForm] = useState({ name: "", code: "", departmentId: "", lecturerId: "", semester: "", academicYear: "" });
+  const [form, setForm] = useState({ name: "", code: "", departmentId: "", lecturerId: "", semester: "", academicYear: "", yearOfStudy: "1" });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
