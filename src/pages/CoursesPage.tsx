@@ -33,10 +33,14 @@ export default function CoursesPage() {
   useEffect(() => {
     fetchCourses();
     supabase.from("departments").select("*").then(({ data }) => setDepartments(data || []));
-    // Fetch lecturers
-    supabase.from("user_roles").select("user_id, profiles:user_id(full_name, email)")
+    // Fetch lecturers (with department from profile)
+    supabase.from("user_roles").select("user_id, profiles:user_id(full_name, email, department_id)")
       .eq("role", "lecturer" as any).then(({ data }) => setLecturers(data || []));
   }, []);
+
+  const eligibleLecturers = form.departmentId
+    ? lecturers.filter((l) => (l.profiles as any)?.department_id === form.departmentId)
+    : lecturers;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
