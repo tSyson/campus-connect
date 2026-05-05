@@ -175,7 +175,7 @@ export default function EnrollmentsPage() {
                 <SelectValue placeholder="All courses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All courses</SelectItem>
+                <SelectItem value="all">All courses</SelectItem>
                 {courses.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.code} — {c.name}</SelectItem>
                 ))}
