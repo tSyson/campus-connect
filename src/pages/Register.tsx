@@ -170,6 +170,7 @@ export default function Register() {
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
 
