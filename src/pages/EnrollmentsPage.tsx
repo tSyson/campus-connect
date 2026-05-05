@@ -21,7 +21,7 @@ export default function EnrollmentsPage() {
   const [open, setOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
-  const [filterCourse, setFilterCourse] = useState("");
+  const [filterCourse, setFilterCourse] = useState("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -92,7 +92,7 @@ export default function EnrollmentsPage() {
     const reg = (en.students as any)?.registration_number?.toLowerCase() || "";
     const courseCode = (en.courses as any)?.code?.toLowerCase() || "";
     const matchesSearch = name.includes(q) || reg.includes(q) || courseCode.includes(q);
-    const matchesCourse = !filterCourse || en.course_id === filterCourse;
+    const matchesCourse = filterCourse === "all" || en.course_id === filterCourse;
     return matchesSearch && matchesCourse;
   });
 
@@ -175,7 +175,7 @@ export default function EnrollmentsPage() {
                 <SelectValue placeholder="All courses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All courses</SelectItem>
+                <SelectItem value="all">All courses</SelectItem>
                 {courses.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.code} — {c.name}</SelectItem>
                 ))}
