@@ -52,6 +52,7 @@ export default function CoursesPage() {
       lecturer_id: form.lecturerId || null,
       semester: form.semester,
       academic_year: form.academicYear,
+      year_of_study: parseInt(form.yearOfStudy) || 1,
     });
     setLoading(false);
     if (error) {
@@ -59,14 +60,16 @@ export default function CoursesPage() {
     } else {
       toast({ title: "Course created" });
       setOpen(false);
-      setForm({ name: "", code: "", departmentId: "", lecturerId: "", semester: "", academicYear: "" });
+      setForm({ name: "", code: "", departmentId: "", lecturerId: "", semester: "", academicYear: "", yearOfStudy: "1" });
       fetchCourses();
     }
   };
 
   const filtered = courses.filter((c) => {
     const q = search.toLowerCase();
-    return c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+    const matchesSearch = c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+    const matchesYear = filterYear === "all" || String(c.year_of_study) === filterYear;
+    return matchesSearch && matchesYear;
   });
 
   return (
