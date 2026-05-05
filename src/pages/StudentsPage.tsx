@@ -71,7 +71,9 @@ export default function StudentsPage() {
   const filtered = students.filter((s) => {
     const name = (s.profiles as any)?.full_name?.toLowerCase() || "";
     const reg = s.registration_number?.toLowerCase() || "";
-    return name.includes(search.toLowerCase()) || reg.includes(search.toLowerCase());
+    const matchesSearch = name.includes(search.toLowerCase()) || reg.includes(search.toLowerCase());
+    const matchesYear = filterYear === "all" || String(s.year_of_study) === filterYear;
+    return matchesSearch && matchesYear;
   });
 
   return (
