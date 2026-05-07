@@ -21,7 +21,7 @@ export default function EnrollmentsPage() {
   const [students, setStudents] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
   const [filterCourse, setFilterCourse] = useState("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
