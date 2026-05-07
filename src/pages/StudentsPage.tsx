@@ -83,6 +83,35 @@ export default function StudentsPage() {
     return matchesSearch && matchesYear;
   });
 
+  const openEnroll = async (student: any) => {
+    setEnrollStudent(student);
+    setSelectedCourse("");
+    setEnrollOpen(true);
+    const [{ data: courses }, { data: existing }] = await Promise.all([
+      supabase.from("courses").select("id, code, name, department_id").eq("department_id", student.department_id).order("code"),
+      supabase.from("enrollments").select("course_id").eq("student_id", student.id),
+    ]);
+    setEligibleCourses(courses || []);
+    setEnrolledCourseIds(new Set((existing || []).map((e: any) => e.course_id)));
+  };
+
+  const handleEnroll = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedCourse || !enrollStudent) return;
+    setEnrollLoading(true);
+    const { error } = await supabase.from("enrollments").insert({
+      student_id: enrollStudent.id,
+      course_id: selectedCourse,
+    });
+    setEnrollLoading(false);
+    if (error) {
+      toast({ variant: "destructive", title: "Error", description: error.message });
+    } else {
+      toast({ title: "Student enrolled" });
+      setEnrollOpen(false);
+    }
+  };
+
   return (
     <DashboardLayout>
       <Button variant="ghost" size="sm" className="mb-4 gap-2" onClick={() => navigate(-1)}>
