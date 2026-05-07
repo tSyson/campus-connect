@@ -22,6 +22,12 @@ export default function StudentsPage() {
   const [departments, setDepartments] = useState<any[]>([]);
   const [form, setForm] = useState({ fullName: "", email: "", password: "", regNumber: "", departmentId: "", yearOfStudy: "1" });
   const [loading, setLoading] = useState(false);
+  const [enrollOpen, setEnrollOpen] = useState(false);
+  const [enrollStudent, setEnrollStudent] = useState<any>(null);
+  const [eligibleCourses, setEligibleCourses] = useState<any[]>([]);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<Set<string>>(new Set());
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [enrollLoading, setEnrollLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchStudents = async () => {
