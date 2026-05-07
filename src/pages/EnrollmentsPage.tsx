@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Search, Trash2, UserPlus, ArrowLeft } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EnrollmentsPage() {
   const navigate = useNavigate();
