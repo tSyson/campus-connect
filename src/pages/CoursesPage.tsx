@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/auth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,9 @@ import { Plus, Search, ArrowLeft } from "lucide-react";
 
 export default function CoursesPage() {
   const navigate = useNavigate();
+  const { user, roles } = useAuth();
+  const isAdmin = roles.includes("admin");
+  const isLecturer = roles.includes("lecturer");
   const [courses, setCourses] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("all");
@@ -25,8 +29,13 @@ export default function CoursesPage() {
   const { toast } = useToast();
 
   const fetchCourses = async () => {
-    const { data } = await supabase.from("courses")
+    let query = supabase.from("courses")
       .select("*, departments(name), profiles:lecturer_id(full_name)");
+    // Lecturers (non-admin) only see their assigned courses
+    if (isLecturer && !isAdmin && user) {
+      query = query.eq("lecturer_id", user.id);
+    }
+    const { data } = await query;
     setCourses(data || []);
   };
 
@@ -36,7 +45,7 @@ export default function CoursesPage() {
     // Fetch lecturers (with department from profile)
     supabase.from("user_roles").select("user_id, profiles:user_id(full_name, email, department_id)")
       .eq("role", "lecturer" as any).then(({ data }) => setLecturers(data || []));
-  }, []);
+  }, [user, isAdmin, isLecturer]);
 
   const eligibleLecturers = form.departmentId
     ? lecturers.filter((l) => (l.profiles as any)?.department_id === form.departmentId)

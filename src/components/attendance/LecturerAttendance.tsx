@@ -37,12 +37,37 @@ export default function LecturerAttendance() {
   }, [user]);
 
   const fetchCheckedIn = async (sessionId: string) => {
-    const { data } = await supabase
+    const { data: records } = await supabase
       .from("attendance_records")
-      .select("*, students(registration_number, profiles:user_id(full_name))")
+      .select("id, checked_in_at, student_id")
       .eq("session_id", sessionId)
       .order("checked_in_at", { ascending: true });
-    setCheckedIn(data || []);
+    if (!records || records.length === 0) {
+      setCheckedIn([]);
+      return;
+    }
+    const studentIds = records.map((r) => r.student_id);
+    const { data: students } = await supabase
+      .from("students")
+      .select("id, registration_number, user_id")
+      .in("id", studentIds);
+    const userIds = (students || []).map((s) => s.user_id);
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("user_id, full_name")
+      .in("user_id", userIds);
+    const enriched = records.map((r) => {
+      const stu = students?.find((s) => s.id === r.student_id);
+      const prof = profiles?.find((p) => p.user_id === stu?.user_id);
+      return {
+        ...r,
+        students: {
+          registration_number: stu?.registration_number,
+          profiles: { full_name: prof?.full_name },
+        },
+      };
+    });
+    setCheckedIn(enriched);
   };
 
   useEffect(() => {
