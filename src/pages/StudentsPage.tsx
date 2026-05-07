@@ -193,6 +193,7 @@ export default function StudentsPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Department</TableHead>
                 <TableHead>Year</TableHead>
+                <TableHead className="w-[120px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -203,17 +204,55 @@ export default function StudentsPage() {
                   <TableCell>{(s.profiles as any)?.email}</TableCell>
                   <TableCell>{(s.departments as any)?.name || "-"}</TableCell>
                   <TableCell>{s.year_of_study}</TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="outline" className="gap-1" onClick={() => openEnroll(s)} disabled={!s.department_id}>
+                      <UserPlus className="h-3.5 w-3.5" /> Enroll
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No students found</TableCell>
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No students found</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={enrollOpen} onOpenChange={setEnrollOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enroll {(enrollStudent?.profiles as any)?.full_name}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEnroll} className="space-y-4">
+            <div className="text-sm text-muted-foreground">
+              Department: <Badge variant="outline">{(enrollStudent?.departments as any)?.name || "-"}</Badge>
+            </div>
+            <div className="space-y-2">
+              <Label>Course Unit</Label>
+              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                <SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger>
+                <SelectContent>
+                  {eligibleCourses.length === 0 ? (
+                    <div className="px-2 py-3 text-sm text-muted-foreground text-center">No courses in this department</div>
+                  ) : (
+                    eligibleCourses
+                      .filter((c) => !enrolledCourseIds.has(c.id))
+                      .map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.code} — {c.name}</SelectItem>
+                      ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full" disabled={enrollLoading || !selectedCourse}>
+              {enrollLoading ? "Enrolling..." : "Enroll Student"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
