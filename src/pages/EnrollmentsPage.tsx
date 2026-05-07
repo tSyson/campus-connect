@@ -115,7 +115,7 @@ export default function EnrollmentsPage() {
             <form onSubmit={handleEnroll} className="space-y-4">
               <div className="space-y-2">
                 <Label>Course Unit</Label>
-                <Select value={selectedCourse} onValueChange={(v) => { setSelectedCourse(v); setSelectedStudent(""); }}>
+                <Select value={selectedCourse} onValueChange={(v) => { setSelectedCourse(v); setSelectedStudentIds(new Set()); }}>
                   <SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger>
                   <SelectContent>
                     {courses.map((c) => (
@@ -128,36 +128,85 @@ export default function EnrollmentsPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>
-                  Student
-                  {courseDeptId && (
-                    <span className="ml-2 text-xs text-muted-foreground font-normal">
-                      (only {(courses.find((c) => c.id === selectedCourse)?.departments as any)?.name} students)
-                    </span>
-                  )}
-                </Label>
-                <Select value={selectedStudent} onValueChange={setSelectedStudent} disabled={!selectedCourse}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={selectedCourse ? "Select student" : "Pick a course first"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {eligibleStudents.length === 0 ? (
-                      <div className="px-2 py-3 text-sm text-muted-foreground text-center">
-                        No students in this department yet
-                      </div>
-                    ) : (
-                      eligibleStudents.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>
-                          {s.registration_number} — {(s.profiles as any)?.full_name}
-                        </SelectItem>
-                      ))
+                <div className="flex items-center justify-between">
+                  <Label>
+                    Students
+                    {courseDeptId && (
+                      <span className="ml-2 text-xs text-muted-foreground font-normal">
+                        (only {(courses.find((c) => c.id === selectedCourse)?.departments as any)?.name} students)
+                      </span>
                     )}
-                  </SelectContent>
-                </Select>
+                  </Label>
+                  {selectedCourse && eligibleStudents.length > 0 && (() => {
+                    const existingPairs = new Set(
+                      enrollments.filter((en) => en.course_id === selectedCourse).map((en) => en.student_id)
+                    );
+                    const selectable = eligibleStudents.filter((s) => !existingPairs.has(s.id));
+                    const allSelected = selectable.length > 0 && selectable.every((s) => selectedStudentIds.has(s.id));
+                    return (
+                      <button
+                        type="button"
+                        className="text-xs text-primary hover:underline"
+                        onClick={() => {
+                          if (allSelected) setSelectedStudentIds(new Set());
+                          else setSelectedStudentIds(new Set(selectable.map((s) => s.id)));
+                        }}
+                      >
+                        {allSelected ? "Deselect all" : "Select all"}
+                      </button>
+                    );
+                  })()}
+                </div>
+                {!selectedCourse ? (
+                  <div className="px-2 py-6 text-sm text-muted-foreground text-center border rounded-md">
+                    Pick a course first
+                  </div>
+                ) : eligibleStudents.length === 0 ? (
+                  <div className="px-2 py-6 text-sm text-muted-foreground text-center border rounded-md">
+                    No students in this department yet
+                  </div>
+                ) : (
+                  <div className="max-h-64 overflow-y-auto border rounded-md divide-y">
+                    {eligibleStudents.map((s) => {
+                      const alreadyEnrolled = enrollments.some(
+                        (en) => en.course_id === selectedCourse && en.student_id === s.id
+                      );
+                      const checked = selectedStudentIds.has(s.id);
+                      return (
+                        <label
+                          key={s.id}
+                          className={`flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/50 ${alreadyEnrolled ? "opacity-50" : ""}`}
+                        >
+                          <Checkbox
+                            checked={checked}
+                            disabled={alreadyEnrolled}
+                            onCheckedChange={(v) => {
+                              setSelectedStudentIds((prev) => {
+                                const next = new Set(prev);
+                                if (v) next.add(s.id);
+                                else next.delete(s.id);
+                                return next;
+                              });
+                            }}
+                          />
+                          <div className="flex-1 text-sm">
+                            <div className="font-medium">{(s.profiles as any)?.full_name}</div>
+                            <div className="text-xs text-muted-foreground font-mono">{s.registration_number}</div>
+                          </div>
+                          {alreadyEnrolled && <span className="text-xs text-muted-foreground">enrolled</span>}
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+                {selectedStudentIds.size > 0 && (
+                  <p className="text-xs text-muted-foreground">{selectedStudentIds.size} selected</p>
+                )}
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Enrolling..." : "Enroll Student"}
+              <Button type="submit" className="w-full" disabled={loading || selectedStudentIds.size === 0}>
+                {loading ? "Enrolling..." : `Enroll ${selectedStudentIds.size || ""} Student${selectedStudentIds.size === 1 ? "" : "s"}`}
               </Button>
+
             </form>
           </DialogContent>
         </Dialog>
