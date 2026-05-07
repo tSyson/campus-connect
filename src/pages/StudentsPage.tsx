@@ -10,7 +10,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Search, ArrowLeft } from "lucide-react";
+import { Plus, Search, ArrowLeft, UserPlus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function StudentsPage() {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ export default function StudentsPage() {
   const [departments, setDepartments] = useState<any[]>([]);
   const [form, setForm] = useState({ fullName: "", email: "", password: "", regNumber: "", departmentId: "", yearOfStudy: "1" });
   const [loading, setLoading] = useState(false);
+  const [enrollOpen, setEnrollOpen] = useState(false);
+  const [enrollStudent, setEnrollStudent] = useState<any>(null);
+  const [eligibleCourses, setEligibleCourses] = useState<any[]>([]);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<Set<string>>(new Set());
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [enrollLoading, setEnrollLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchStudents = async () => {
@@ -75,6 +82,35 @@ export default function StudentsPage() {
     const matchesYear = filterYear === "all" || String(s.year_of_study) === filterYear;
     return matchesSearch && matchesYear;
   });
+
+  const openEnroll = async (student: any) => {
+    setEnrollStudent(student);
+    setSelectedCourse("");
+    setEnrollOpen(true);
+    const [{ data: courses }, { data: existing }] = await Promise.all([
+      supabase.from("courses").select("id, code, name, department_id").eq("department_id", student.department_id).order("code"),
+      supabase.from("enrollments").select("course_id").eq("student_id", student.id),
+    ]);
+    setEligibleCourses(courses || []);
+    setEnrolledCourseIds(new Set((existing || []).map((e: any) => e.course_id)));
+  };
+
+  const handleEnroll = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedCourse || !enrollStudent) return;
+    setEnrollLoading(true);
+    const { error } = await supabase.from("enrollments").insert({
+      student_id: enrollStudent.id,
+      course_id: selectedCourse,
+    });
+    setEnrollLoading(false);
+    if (error) {
+      toast({ variant: "destructive", title: "Error", description: error.message });
+    } else {
+      toast({ title: "Student enrolled" });
+      setEnrollOpen(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -157,6 +193,7 @@ export default function StudentsPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Department</TableHead>
                 <TableHead>Year</TableHead>
+                <TableHead className="w-[120px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -167,17 +204,55 @@ export default function StudentsPage() {
                   <TableCell>{(s.profiles as any)?.email}</TableCell>
                   <TableCell>{(s.departments as any)?.name || "-"}</TableCell>
                   <TableCell>{s.year_of_study}</TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="outline" className="gap-1" onClick={() => openEnroll(s)} disabled={!s.department_id}>
+                      <UserPlus className="h-3.5 w-3.5" /> Enroll
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">No students found</TableCell>
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No students found</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={enrollOpen} onOpenChange={setEnrollOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enroll {(enrollStudent?.profiles as any)?.full_name}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEnroll} className="space-y-4">
+            <div className="text-sm text-muted-foreground">
+              Department: <Badge variant="outline">{(enrollStudent?.departments as any)?.name || "-"}</Badge>
+            </div>
+            <div className="space-y-2">
+              <Label>Course Unit</Label>
+              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                <SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger>
+                <SelectContent>
+                  {eligibleCourses.length === 0 ? (
+                    <div className="px-2 py-3 text-sm text-muted-foreground text-center">No courses in this department</div>
+                  ) : (
+                    eligibleCourses
+                      .filter((c) => !enrolledCourseIds.has(c.id))
+                      .map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.code} — {c.name}</SelectItem>
+                      ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full" disabled={enrollLoading || !selectedCourse}>
+              {enrollLoading ? "Enrolling..." : "Enroll Student"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
