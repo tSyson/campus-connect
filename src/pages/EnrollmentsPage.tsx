@@ -48,31 +48,30 @@ export default function EnrollmentsPage() {
 
   const handleEnroll = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCourse || !selectedStudent) {
-      toast({ variant: "destructive", title: "Required", description: "Select both a course and a student." });
+    if (!selectedCourse || selectedStudentIds.size === 0) {
+      toast({ variant: "destructive", title: "Required", description: "Select a course and at least one student." });
       return;
     }
-    // Check duplicate
-    const existing = enrollments.find(
-      (en) => en.course_id === selectedCourse && en.student_id === selectedStudent
+    const existingPairs = new Set(
+      enrollments.filter((en) => en.course_id === selectedCourse).map((en) => en.student_id)
     );
-    if (existing) {
-      toast({ variant: "destructive", title: "Already enrolled", description: "This student is already enrolled in this course." });
+    const toInsert = Array.from(selectedStudentIds)
+      .filter((sid) => !existingPairs.has(sid))
+      .map((sid) => ({ course_id: selectedCourse, student_id: sid }));
+    if (toInsert.length === 0) {
+      toast({ variant: "destructive", title: "Already enrolled", description: "All selected students are already enrolled." });
       return;
     }
     setLoading(true);
-    const { error } = await supabase.from("enrollments").insert({
-      course_id: selectedCourse,
-      student_id: selectedStudent,
-    });
+    const { error } = await supabase.from("enrollments").insert(toInsert);
     setLoading(false);
     if (error) {
       toast({ variant: "destructive", title: "Error", description: error.message });
     } else {
-      toast({ title: "Student enrolled successfully" });
+      toast({ title: `Enrolled ${toInsert.length} student(s)` });
       setOpen(false);
       setSelectedCourse("");
-      setSelectedStudent("");
+      setSelectedStudentIds(new Set());
       fetchEnrollments();
     }
   };
